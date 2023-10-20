@@ -16,9 +16,3 @@ for /d %%i in ("input\*") do (
 
 pause
 exit
-
-
-
-
-call MRIcroGL\Resources\dcm2niix.exe -f "%f_%p_%t_%s" -p y -z n -b n -o "C:\Users\User\Desktop\XNAT datasets\= conversion\output" "C:\Users\User\Desktop\XNAT datasets\= conversion\input"
-pause
