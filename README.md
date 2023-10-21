@@ -42,8 +42,9 @@ To-Do:
 	- GRE field mapping (gradient echo): field mapping with magnitude and phase difference
 	- fmap-SE-AP & fmap-SE-PA (spin echoes with opposite phase encoding directions)
 
-<br>
-##Available Datasets##
+<be>
+
+## Available Datasets ##
 
     +---s574_session01
     |   +---anatomical
