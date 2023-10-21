@@ -11,7 +11,7 @@ if not os.path.exists(temp_path):
     os.makedirs(temp_path)
 else:
     task = "rm -rf " + temp_path
-    #subprocess.Popen(task.split(), stdout=subprocess.PIPE)
+    subprocess.Popen(task.split(), stdout=subprocess.PIPE)
 
     
 
@@ -65,10 +65,10 @@ def extract_dwell_time(nii):
     return dwell_time
 
 
+
+
 # brain extraction
 def run_bet(input_img, output_img):
-    #subprocess.check_output(['bet', input_img, output_img])
-
     task = "bet <input_img> <output_img>"
     task = task.replace("<input_img>",      input_img)
     task = task.replace("<output_img>",     output_img)
