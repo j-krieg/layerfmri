@@ -2,11 +2,11 @@
 
 
 
-The dataset comes from s574-session01 and comprises the following images
+The dataset comes from s574-session01 and comprises the following images:
 
 
 
-Structural Images:
+Structural Images
 
 - 	5-t1_mp2rage_sag_HCP_0pp8mm3_T1map_BL5_230717_INV1.nii
 - 	5-t1_mp2rage_sag_HCP_0pp8mm3_T1map_BL5_230717_INV1.nii
@@ -17,7 +17,7 @@ Structural Images:
 <br>
 
 
-Fieldmapping Images:
+Fieldmapping Images
 
 - 	17-gre_field_mapping_HCP_0pp8mm3_e2.nii
 - 	18-gre_field_mapping_HCP_0pp8mm3_e2_ph.nii
