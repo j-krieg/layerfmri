@@ -45,7 +45,7 @@ Distortion correction is performed by estimating a distortion map with ***fsl_pr
 <br>
 
 - calculating a fieldmap: **fsl\_prepare\_fieldmap SIEMENS phaseImg magImg output deltaTE**
-- unwarping witht the fieldmap: **fugue -i inputEPI --dwell=dwell\_time --loadfmap=fieldmap -u output**
+- unwarping with the fieldmap: **fugue -i inputEPI --dwell=dwell\_time --loadfmap=fieldmap -u output**
 
 
 
