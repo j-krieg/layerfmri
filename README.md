@@ -39,7 +39,7 @@ To-Do:
 - T2 SPACE: [mrimaster](https://mrimaster.com/characterise-image-3d-tse/#:~:text=This%20makes%20the%20SPACE%20sequence,echo%20sequence%20used%20in%20MRI.): "SPACE (Sampling Perfection with Application optimized Contrasts using different flip-angle Evolutions) is a 3D TSE (turbo spin echo) sequence used in magnetic resonance imaging (MRI). It’s known for providing high-resolution isotropic 3D images, which can be reformatted in any plane without loss of image quality. This makes the SPACE sequence particularly useful for imaging structures with complex anatomy or for cases where multiplanar reconstructions are needed."
 
 
-- field mapping methods ( [source](https://andysbrainbook.readthedocs.io/en/latest/OpenScience/OS/BIDS_Overview.html) )
+- field mapping methods ([source](https://andysbrainbook.readthedocs.io/en/latest/OpenScience/OS/BIDS_Overview.html))
 	- GRE field mapping (gradient echo): field mapping with magnitude and phase difference
 	- fmap-SE-AP & fmap-SE-PA (spin echoes with opposite phase encoding directions)
 
