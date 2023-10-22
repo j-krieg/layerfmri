@@ -45,13 +45,12 @@ Distortion correction is performed by estimating a distortion map with ***fsl_pr
 <br>
 
 - calculating a fieldmap: **fsl\_prepare\_fieldmap SIEMENS phaseImg magImg output deltaTE**
-- unwarping witht the fieledmap: **fugue -i inputEPI --dwell=dwell\_time --loadfmap=fieldmap -u output**
+- unwarping witht the fieldmap: **fugue -i inputEPI --dwell=dwell\_time --loadfmap=fieldmap -u output**
 
 
 
 <br>
-The dwell time can be determined by
->     dwell_time = 1 / (bandwidth * phase_encoding_steps)
+The dwell time can be determined by: dwell\_time = 1 / (bandwidth * number\_phase\_encoding\_steps)
     
 wherein bandwidth and the number of phase encoding steps can be extracted from the DICOM header:
 
