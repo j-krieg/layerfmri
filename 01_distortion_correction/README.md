@@ -50,7 +50,7 @@ Distortion correction is performed by estimating a distortion map with ***fsl_pr
 
 
 <br>
-The dwell time can be determined by: dwell\_time = 1 / (bandwidth * number\_phase\_encoding\_steps)
+The dwell time can be determined by: dwell_time = 1 / (bandwidth * number_phase_encoding_steps)
     
 wherein bandwidth and the number of phase encoding steps can be extracted from the DICOM header:
 
