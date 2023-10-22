@@ -116,8 +116,8 @@ To-Do:
     |   22-CEST_MIMOSA_6p25uT.nii
     |   23-CEST_T1_SATREC.nii
     |
-    \---others
-    1-AAhead_scout.nii
-    2-AAhead_scout_MPR_sag.nii
-    3-AAhead_scout_MPR_cor.nii
-    4-AAhead_scout_MPR_tra.nii
+    +---others
+    |   1-AAhead_scout.nii
+    |   2-AAhead_scout_MPR_sag.nii
+    |   3-AAhead_scout_MPR_cor.nii
+    |   4-AAhead_scout_MPR_tra.nii
