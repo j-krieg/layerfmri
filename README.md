@@ -32,7 +32,7 @@ To-Do:
 - T2-star-mapping: used to map inhomogenities
 
 
-- MP2rage (Magnetization Prepared - RApid Gradient Echo)
+- MP2RAGE (Magnetization Prepared - RApid Gradient Echo)
 	[MP-RAGE vs. MP2RAGE](https://mriquestions.com/mp-rage-v-mr2rage.html) :"The MP2RAGE sequence, by comparison, uses two Turbo-FLASH GRE readouts between each inversion pulse."
 	
 
