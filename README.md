@@ -52,21 +52,21 @@ To-Do:
 
 ## Available Datasets ##
 
-+---anat
-|       sub-s574\_t1\_mp2rage\_sag\_HCP\_0pp8mm3\_T1map\_BL5\_230717\_UNI\_DEN.nii
-|       
-+---fmap
-|       sub-s574\_acq-0p8mm\_magnitude2.json
-|       sub-s574\_acq-0p8mm\_magnitude2.nii.gz
-|       sub-s574\_acq-0p8mm\_phasediff.json
-|       sub-s574\_acq-0p8mm\_phasediff.nii.gz
-|       sub-s574\_acq-1p3mm\_magnitude2.json
-|       sub-s574\_acq-1p3mm\_magnitude2.nii.gz
-|       sub-s574\_acq-1p3mm\_phasediff.json
-|       sub-s574\_acq-1p3mm\_phasediff.nii.gz
-|       
-\---func
-        sub-s574\_task-rest\_acq-0p8mm\_bold.json
-        sub-s574\_task-rest\_acq-0p8mm\_bold.nii.gz
-        sub-s574\_task-rest\_acq-1p3mm\_bold.json
-        sub-s574\_task-rest\_acq-1p3mm\_bold.nii.gz
+    +---anat
+    |   sub-s574_t1_mp2rage_sag_HCP_0pp8mm3_T1map_BL5_230717_UNI_DEN.nii
+    |   
+    +---fmap
+    |   sub-s574_acq-0p8mm_magnitude2.json
+    |   sub-s574_acq-0p8mm_magnitude2.nii.gz
+    |   sub-s574_acq-0p8mm_phasediff.json
+    |   sub-s574_acq-0p8mm_phasediff.nii.gz
+    |   sub-s574_acq-1p3mm_magnitude2.json
+    |   sub-s574_acq-1p3mm_magnitude2.nii.gz
+    |   sub-s574_acq-1p3mm_phasediff.json
+    |   sub-s574_acq-1p3mm_phasediff.nii.gz
+    |   
+    \---func
+    sub-s574_task-rest_acq-0p8mm_bold.json
+    sub-s574_task-rest_acq-0p8mm_bold.nii.gz
+    sub-s574_task-rest_acq-1p3mm_bold.json
+    sub-s574_task-rest_acq-1p3mm_bold.nii.gz
