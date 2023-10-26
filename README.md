@@ -6,16 +6,21 @@ This is a collection of code for the layer-fMRI processing pipeline.
 ## Tasks ##
 Current Status:
 
-- Minimal Example of FSL-based distortion correction
+- Minimal Example of FSL-based distortion correction and motion correction
 <br>
-<br>
+<be>
+
+Issues:
+ - Check if fieldmap resulting from **preprocessing_createFieldmap** is correct
+ - find a way to output a matrix in the distortion correction step **preprocessing_applyFieldmap** to use it in the one-step version **epi_motion_and_distortion_corrected** as part of a concatenated matrix that describes the distortion correction and the motion correction together. 
+ 
 
 To-Do:
 
-- registration to the standard MNI152 template
-- noise estimation with NORDIC
-- motion correction
-- BOLD response
+- **topup** using EPI data acquired with opposite phase encoding directions
+- one-step transformation for distortion correction, motion correction, and field correction
+- align anatomical images to preprocessed functional images in freesurfer, LayNii conversion, layer analysis
+
 
 
 ## Sequence Overview ##
