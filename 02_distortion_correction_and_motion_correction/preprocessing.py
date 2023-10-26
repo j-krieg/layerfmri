@@ -290,7 +290,7 @@ def preprocessing_applyFieldmap(input_img, fieldmap_distortion, output_corrected
 
 
 def preprocessing_motionCorrection (epi_input, epi_motionCorrected, matrix_output):
-# saved the motion-corrected .nii image and the matrix that was used to perfrom the affine transformation
+# saved the motion-corrected .nii image and the matrix that was used to perfrom the transformation
     task = "3dvolreg -twopass -1Dmatrix_save <matrix_output> -prefix <epi_motionCorrected> <epi_input>"
 
     task = task.replace("<epi_input>", epi_input)
@@ -345,13 +345,13 @@ for job in jobs:
     preprocessing_applyFieldmap(epi, fieldmap_distortion, epi_corrected, matrix_distortionCorr)
     # uses fugue
 
-    # 3. motion correction to distortion corrrected functional images (with additional output of affine transformation matrix):
+    # 3. motion correction to distortion corrrected functional images (with additional output of transformation matrix):
     matrix_motion = temp_path + os.path.basename((epi_corrected.replace(".gz", "")).replace(".nii", "_matrixMotion.1D"))
     epi_motion_corrected = epi_corrected.replace(".nii", "_motionCorr.nii")
     preprocessing_motionCorrection(epi_corrected, epi_motion_corrected, matrix_motion)
     # uses 3dvolreg
 
-    # 4. Undistort with concatenated matrix to perform only one affine transformation instead of two
+    # 4. Undistort with concatenated matrix to perform only one transformation instead of two
     epi_motion_and_distortion_corrected = output_path + os.path.basename(epi.replace(".nii", "_motion_and_distortion_corrected_one_step.nii"))
     undistort_field_and_motion (anatomical, epi, matrix_distortionCorr , matrix_motion, epi_motion_and_distortion_corrected)
     # uses cat_matvec and 3dAllineate
