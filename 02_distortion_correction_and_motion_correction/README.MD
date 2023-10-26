@@ -59,7 +59,7 @@ Distortion correction is performed by estimating a distortion map with ***fsl_pr
 
 <br>
 
-- calculating a fieldmap: **fsl\_prepare\_fieldmap SIEMENS phaseImg magImg output deltaTE**
+- calculating a fieldmap: **fsl\_prepare\_fieldmap SIEMENS phaseImg magImg output deltaTE=1.02**
 - unwarping with the fieldmap: **fugue -i inputEPI --dwell=dwell\_time --loadfmap=fieldmap -u output**
 - motion correction: **3dvolreg -twopass -1Dmatrix\_save matrix\_output -prefix epi_motionCorrected epi\_input**
 - matrix concatenation with **cat\_matvec -ONELINE anat_ns+tlrc::WARP_DATA -I matrix\_distortion -I matrix\_motion > concatenated\_matrix**
