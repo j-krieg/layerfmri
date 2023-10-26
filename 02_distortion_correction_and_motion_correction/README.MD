@@ -3,9 +3,9 @@
 
 Simple demo to:
 
--	perform distortion correction with **fsl_prepare_fieldmap** and **fugue**
--	perform motion correction with **3dvolreg**
--	calculate a concatenated matrix with **cat_matvec** to perform one-step undistortion with **3dAllineate**
+- perform distortion correction with **fsl_prepare_fieldmap** and **fugue**
+- perform motion correction with **3dvolreg**
+- calculate a concatenated matrix with **cat_matvec** to perform one-step undistortion with **3dAllineate**
 
 
 
