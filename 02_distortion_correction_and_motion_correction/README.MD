@@ -3,8 +3,8 @@
 
 Simple demo to:
 
--	1. perform distortion correction with **fsl_prepare_fieldmap** and **fugue**
--	2. perform motion correction with **3dvolreg**
+-	perform distortion correction with **fsl_prepare_fieldmap** and **fugue**
+-	perform motion correction with **3dvolreg**
 -	calculate a concatenated matrix with **cat_matvec** to perform one-step undistortion with **3dAllineate**
 
 
@@ -24,7 +24,7 @@ The dataset comes from s574-session01 and comprises the following images:
 
 
 
-####Fieldmapping Images:####
+#### Fieldmapping Images: ####
 
 - 	sub-s574_acq-0p8mm_magnitude2.nii.gz
 - 	sub-s574_acq-0p8mm_phasediff.nii.gz
@@ -32,7 +32,7 @@ The dataset comes from s574-session01 and comprises the following images:
 - 	sub-s574_acq-1p3mm_phasediff.nii.gz
 
 
-####Functional Images:####
+#### Functional Images: ####
 
 - 	sub-s574_task-rest_acq-0p8mm_bold.nii.gz
 - 	sub-s574_task-rest_acq-1p3mm_bold.nii.gz
