@@ -65,8 +65,8 @@ To-Do:
     |   sub-s574_acq-1p3mm_phasediff.json
     |   sub-s574_acq-1p3mm_phasediff.nii.gz
     |   
-    \---func
-    sub-s574_task-rest_acq-0p8mm_bold.json
-    sub-s574_task-rest_acq-0p8mm_bold.nii.gz
-    sub-s574_task-rest_acq-1p3mm_bold.json
-    sub-s574_task-rest_acq-1p3mm_bold.nii.gz
+    +---func
+    |   sub-s574_task-rest_acq-0p8mm_bold.json
+    |   sub-s574_task-rest_acq-0p8mm_bold.nii.gz
+    |   sub-s574_task-rest_acq-1p3mm_bold.json
+    |   sub-s574_task-rest_acq-1p3mm_bold.nii.gz
