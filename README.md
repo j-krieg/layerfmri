@@ -8,14 +8,14 @@ Current Status:
 
 - Minimal Example of FSL-based distortion correction and motion correction
 <br>
-<be>
+<br>
 
 Issues:
  - Check if fieldmap resulting from **preprocessing_createFieldmap** is correct
  - find a way to output a matrix in the distortion correction step **preprocessing_applyFieldmap** to use it in the one-step version **epi_motion_and_distortion_corrected** as part of a concatenated matrix that describes the distortion correction and the motion correction together. 
  - **3dWarp -deoblique** 
 
-
+<br>
 To-Do:
 
 - **topup** using EPI data acquired with opposite phase encoding directions
