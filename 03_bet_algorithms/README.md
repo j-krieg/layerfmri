@@ -1,6 +1,6 @@
 # BET Algorithm Comparison for 7 T1-Weighted Images #
 
-Five different configurations were tested with
+Five different configurations for brain extraction were tested:
 
 - FSL's bet with T1 only
 - FSL's bet with T1 and T2
