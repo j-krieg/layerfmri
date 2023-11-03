@@ -1,6 +1,6 @@
 # BET Algorithm Comparison for 7T T1-Weighted Images #
 
-Ultra High-Field Magnetic Resonance Imaging enables layer-dependent functional analysis. Yet, segmentation algorithms "are not maximally effective on 7T volumes, due to increased data complexity, voxel intensity inhomogeneity (intra‐/inter‐sites) and site‐specific artefacts." ([Svanera et al. (2021)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8559470/)) Therefore, the particular problem is that "fMRI studies crucially depend on accurate and precise delineations of the gray matter (GM) ribbon both at the inner (white matter; WM)." [Gulban et al. (2018)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5991408/)
+Ultra High-Field Magnetic Resonance Imaging enables layer-dependent functional analysis. Yet, segmentation algorithms "are not maximally effective on 7T volumes, due to increased data complexity, voxel intensity inhomogeneity (intra‐/inter‐sites) and site‐specific artefacts." ([Svanera et al. (2021)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8559470/)) Therefore, the particular problem is that "fMRI studies crucially depend on accurate and precise delineations of the gray matter (GM) ribbon both at the inner (white matter; WM)." ([Gulban et al. (2018)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5991408/))
 
 <br><br>Brain extraction is the first step before applying atlas-based extraction of specific brain areas.
 Five different configurations for brain extraction were tested:
