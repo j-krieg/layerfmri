@@ -28,7 +28,7 @@ In a next step the resulting warp matrix is applied to *HarvardOxford-cort-maxpr
 ![](atlas.png)<br>Fig. 1: Atlas *HarvardOxford cort maxprob thr25 2mm*, Source: https://neurovault.org/images/1699/
 
 <br>
-## List of intensity-coded anatomical locations ##
+List of intensity-coded anatomical locations <br>
 
     1	frontal pole
     2	insular cortex
