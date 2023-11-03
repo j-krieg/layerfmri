@@ -1,5 +1,7 @@
 # BET Algorithm Comparison for 7 T1-Weighted Images #
 
+Ultra High-Field Magnetic Resonance Imaging enables layer-dependent functional analysis. Yet, segmentation algorithms "are not maximally effective on 7T volumes, due to increased data complexity, voxel intensity inhomogeneity (intra‐/inter‐sites) and site‐specific artefacts" ([Svanera et al. (2021)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8559470/)). "fMRI studies crucially depend on accurate and precise delineations of the gray matter (GM) ribbon both at the inner (white matter; WM)" [ulban et al. (2018)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5991408/)
+
 Five different configurations for brain extraction were tested:
 
 - FSL's bet with T1 only
