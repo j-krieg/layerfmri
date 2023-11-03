@@ -22,7 +22,7 @@ In a next step the resulting warp matrix is applied to *HarvardOxford-cort-maxpr
 
 
 
-![](HO.png)Fig 1.: Atlas *HarvardOxford cort maxprob thr25 2mm*, Source: https://neurovault.org/images/1699/
+![](atlas.png)Fig 1.: Atlas *HarvardOxford cort maxprob thr25 2mm*, Source: https://neurovault.org/images/1699/
 
 <br>
 **List of intensity-coded anatomical locations**
