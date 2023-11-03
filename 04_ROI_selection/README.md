@@ -9,7 +9,7 @@ Requirements:
 - HarvardOxford-cort-maxprob-thr25-1mm.nii.gz
 
 
-The Harvard-Oxford atlas shares a coordinate system with the MNI152 template. It contains an intensity-coded map of selected brain regions. The intensities are defined [here](https://neurovault.org/images/1699/)
+The Harvard-Oxford atlas shares a coordinate system with the MNI152 template. It contains an intensity-coded map of selected brain regions. The intensities are defined [here](https://neurovault.org/images/1699/).<br>
 For example, a mask for the precentral gryus (intensity 7) can be created with *fslmaths*:
 
     fslmaths HarvardOxford-cort-maxprob-thr25-1mm.nii.gz -thr 7 -uthr 7 -bin harvard_precentralGyrus.nii.gz
