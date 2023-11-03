@@ -9,7 +9,7 @@ Five different configurations were tested with
 - HD-BET with T1 only
 
 <br>
-ROBEX is provided [here](https://www.nitrc.org/projects/robex) and claims:
+ROBEX is provided [here](https://www.nitrc.org/projects/robex) with the claim
 
 > Many methods have been proposed in the literature, but they often: 1. work well on certain datasets but fail on others; 2. require case-specific parameter tuning. ROBEX aims for robust skull-stripping across datasets with no parameter settings.
 
