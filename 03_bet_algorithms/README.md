@@ -9,7 +9,7 @@ Five different configurations were testes with
 - HD-BET with T1 only
 
 <br>
-ROBEX is provided [here](https://www.nitrc.org/frs/download.php/5994/ROBEXv12.linux64.tar.gz//?i_agree=1&download_now=1) and claims:
+ROBEX is provided [here](https://www.nitrc.org/projects/robex) and claims:
 
 > Many methods have been proposed in the literature, but they often: 1. work well on certain datasets but fail on others; 2. require case-specific parameter tuning. ROBEX aims for robust skull-stripping across datasets with no parameter settings.
 
@@ -33,11 +33,9 @@ They can be applied to an image by the following prompts:
     ./others/ROBEX/runROBEX.sh -i <T1> -o out.nii.gz
     mv others/ROBEX/out.nii.gz <output>
     
-    
     # 4. ROBEX T1 and T2
     ./others/ROBEX/runROBEX.sh -i <T1> -o out.nii.gz -t <T2_regT1>
     mv others/ROBEX/out.nii.gz <output>
-    
     
     # 5. HD-bet (only T1)
     hd-bet -i <T1> -o <output> -device cpu -mode fast -tta 0
