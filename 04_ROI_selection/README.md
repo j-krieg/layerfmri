@@ -21,7 +21,7 @@ In order to obtain a mask in the coordinate system of the functional image, a re
     fnirt --in=MNI152_2009_template.nii.gz --ref=sub-s574_task-rest_acq-0p8mm_bold --iout=MNI_to_functional.nii.gz
 
 <br>
-In a next step the resulting warp matrix is applied to *HarvardOxford-cort-maxprob-thr25-1mm.nii.gz*.
+In a next step the resulting warp matrix is applied to HarvardOxford-cort-maxprob-thr25-1mm.nii.gz.
 
 <br><br>
 
