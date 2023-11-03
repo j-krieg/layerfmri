@@ -1,5 +1,5 @@
 # Atlas-based ROI Selection for fMRI Images #
-This is a sketch of the workflow of to extract a region-of-interest (ROI) from a functional MRI image.
+This is a sketch of the workflow to extract a region of interest (ROI) from a functional MRI image.
 <br>
 <br>
 
