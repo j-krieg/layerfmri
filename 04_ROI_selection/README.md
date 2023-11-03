@@ -20,9 +20,9 @@ In order to obtain a mask in the coordinate system of the functional image, a re
 <br>
 In a next step the resulting warp matrix is applied to *HarvardOxford-cort-maxprob-thr25-1mm.nii.gz*.
 
+<br><br>
 
-
-![](atlas.png)<br>*Fig. 1*: Atlas *HarvardOxford cort maxprob thr25 2mm*, Source: https://neurovault.org/images/1699/
+![](atlas.png)<br>Fig. 1: Atlas *HarvardOxford cort maxprob thr25 2mm*, Source: https://neurovault.org/images/1699/
 
 <br>
 **List of intensity-coded anatomical locations**
