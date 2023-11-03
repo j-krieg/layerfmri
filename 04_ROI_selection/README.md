@@ -1,4 +1,7 @@
 # Atlas-based ROI Selection for fMRI Images #
+This is a sketch of the workflow of to extract a region-of-interest (ROI) from a functional MRI image.
+<br>
+<br>
 
 Requirements:
 
@@ -6,7 +9,7 @@ Requirements:
 - HarvardOxford-cort-maxprob-thr25-1mm.nii.gz
 
 
-The HO atlas shares the same coordinate system with the MNI1523 template. It contains an intensity-coded map of selected brain regions. The intensities are defined [here](https://neurovault.org/images/1699/)
+The Harvard-Oxford atlas shares the same coordinate system with the MNI1523 template. It contains an intensity-coded map of selected brain regions. The intensities are defined [here](https://neurovault.org/images/1699/)
 For example, a mask for the precentral gryus (intensity 7) can be created with *fslmaths*:
 
     fslmaths HarvardOxford-cort-maxprob-thr25-1mm.nii.gz -thr 7 -uthr 7 -bin harvard_precentralGyrus.nii.gz
