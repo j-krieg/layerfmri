@@ -15,7 +15,7 @@ In this particular version, the estimation of the bias field has been improved:
 	    biasfield = naming (input, "biasFieldEstimation", temp_path)
 	    biasfield_smooth = naming(input, "smooth", temp_path)
 	    
-	    firstimg = naming (input, "firstimg", temp_path)# first image from functional
+	    firstimg = naming (input, "firstimg", temp_path)				# first image from functional
 	    firstbiascorr= naming(input, "firstbiascorr", temp_path)			# first image bias corrected
 	    firstbiascorr_restore = firstbiascorr.replace(".nii", "_restore.nii")   	# naming convention comes from fast
 	    
