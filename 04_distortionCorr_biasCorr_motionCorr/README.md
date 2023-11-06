@@ -63,7 +63,7 @@ As a result, the preprocessing pipeline performs the following steps:
 	for job in jobs:
 	    [anatomicalT1, anatomicalT2, fieldmap_mag, fieldmap_phase, functional] = job
 	
-	    # 1. bias field undistortion
+	    # 1. undistortion
 	    functional_undistorted = naming(functional, "undistorted", bias_path)
 	    biasfieldUndistortion (functional, fieldmap_mag, fieldmap_phase, functional_undistorted)
 	
