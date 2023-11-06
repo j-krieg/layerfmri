@@ -20,13 +20,13 @@ In this particular version, the estimation of the bias field has been improved:
 	    firstbiascorr_restore = firstbiascorr.replace(".nii", "_restore.nii")   # naming convention comes form fast
 	    
 	    
-	    tasks = [   "fslroi <input> <firstimg> 0 1",# select first image from time series (0 refers to the index, 1 refers to the number of images to be extracted)
-	    "fast -B -o <firstbiascorr> <firstimg>",# output is (...)_restore.nii.gz, needs to be renamed in next steps
-	    "rm <firstbiascorr>",
-	    "mv <firstbiascorr_restore> <firstbiascorr>",
-	    "fslmaths <firstimg> -div <firstbiascorr> <biasfield>", # Want to calculate bias field to apply it too all other images in time series. Bias field is multiplicative
-	    "fslmaths <biasfield> -s 1 <biasfield_smooth>", # needed to not depend on noise in first image of the time series (-s 3 refers to 3 voxels)
-	    "fslmaths <input> -div <biasfield_smooth> <output>"]# Remove bias field from entire time series.
+	    tasks = [   "fslroi <input> <firstimg> 0 1",				# select first image from time series (0 refers to the index, 1 refers to the number of images to be extracted)
+	    		"fast -B -o <firstbiascorr> <firstimg>",			# output is (...)_restore.nii.gz, needs to be renamed in next steps
+	   		"rm <firstbiascorr>",
+	    		"mv <firstbiascorr_restore> <firstbiascorr>",
+	    		"fslmaths <firstimg> -div <firstbiascorr> <biasfield>", 	# Want to calculate bias field to apply it too all other images in time series. Bias field is multiplicative
+	    		"fslmaths <biasfield> -s 1 <biasfield_smooth>", 		# needed to not depend on noise in first image of the time series (-s 3 refers to 3 voxels)
+	    		"fslmaths <input> -div <biasfield_smooth> <output>"] 		# Remove bias field from entire time series.
 
 	    for task in tasks:
 	        task = task.replace("<input>", input)
