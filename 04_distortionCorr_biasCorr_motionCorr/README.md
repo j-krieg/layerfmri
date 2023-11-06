@@ -1,4 +1,4 @@
-**fMRI Preprocessing Pipeline**
+# fMRI Preprocessing Pipeline #
 
 The current preprocessing pipeline comprises the steps of:
 
