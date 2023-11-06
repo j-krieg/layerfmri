@@ -16,7 +16,7 @@ In this particular version, the estimation of the bias field has been improved:
 	    biasfield_smooth = naming(input, "smooth", temp_path)
 	    
 	    firstimg = naming (input, "firstimg", temp_path)# first image from functional
-	    firstbiascorr= naming(input, "firstbiascorr", temp_path)# first image bias corrected
+	    firstbiascorr= naming(input, "firstbiascorr", temp_path)			# first image bias corrected
 	    firstbiascorr_restore = firstbiascorr.replace(".nii", "_restore.nii")   	# naming convention comes from fast
 	    
 	    
@@ -26,8 +26,9 @@ In this particular version, the estimation of the bias field has been improved:
 	    		"mv <firstbiascorr_restore> <firstbiascorr>",
 	    		"fslmaths <firstimg> -div <firstbiascorr> <biasfield>", 	# Want to calculate bias field to apply it too all other images in time series. Bias field is multiplicative
 	    		"fslmaths <biasfield> -s 1 <biasfield_smooth>", 		# needed to not depend on noise in first image of the time series (-s 3 refers to 3 voxels)
-	    		"fslmaths <input> -div <biasfield_smooth> <output>"] 		# Remove bias field from entire time series.
-
+	    		"fslmaths <input> -div <biasfield_smooth> <output>" 		# Remove bias field from entire time series.
+		    ]
+      
 	    for task in tasks:
 	        task = task.replace("<input>", input)
 	        task = task.replace("<output>", output)
