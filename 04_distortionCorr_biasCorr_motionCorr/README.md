@@ -17,7 +17,7 @@ In this particular version, the estimation of the bias field has been improved:
 	    
 	    firstimg = naming (input, "firstimg", temp_path)# first image from functional
 	    firstbiascorr= naming(input, "firstbiascorr", temp_path)# first image bias corrected
-	    firstbiascorr_restore = firstbiascorr.replace(".nii", "_restore.nii")   # naming convention comes form fast
+	    firstbiascorr_restore = firstbiascorr.replace(".nii", "_restore.nii")   	# naming convention comes from fast
 	    
 	    
 	    tasks = [   "fslroi <input> <firstimg> 0 1",				# select first image from time series (0 refers to the index, 1 refers to the number of images to be extracted)
