@@ -12,7 +12,7 @@ The current preprocessing pipeline comprises the steps of:
 In this particular version, the estimation of the bias field has been improved:
 
     def biasfieldCorrection (input, output):
-    	biasfield = naming (input, "biasFieldEstimation", temp_path)
+	    biasfield = naming (input, "biasFieldEstimation", temp_path)
 	    biasfield_smooth = naming(input, "smooth", temp_path)
 	    
 	    firstimg = naming (input, "firstimg", temp_path)# first image from functional
