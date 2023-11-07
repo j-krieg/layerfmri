@@ -25,7 +25,7 @@ In this particular version, the estimation of the bias field has been improved:
 	   		"rm <firstbiascorr>",
 	    		"mv <firstbiascorr_restore> <firstbiascorr>",
 	    		"fslmaths <firstimg> -div <firstbiascorr> <biasfield>", 	# Want to calculate bias field to apply it too all other images in time series. Bias field is multiplicative
-	    		"fslmaths <biasfield> -s 1 <biasfield_smooth>", 		# needed to not depend on noise in first image of the time series (-s 3 refers to 3 voxels)
+	    		"fslmaths <biasfield> -s 1 <biasfield_smooth>", 		# smoothing
 	    		"fslmaths <input> -div <biasfield_smooth> <output>" 		# Remove bias field from entire time series.
 		    ]
       
