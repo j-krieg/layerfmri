@@ -3,6 +3,7 @@
 
 
 <br>
+
     bet data/sub-s574/fmap/sub-s574_acq-0p8mm_magnitude2.nii.gz temp/sub-s574_acq-0p8mm_magnitude2_bet.nii.gz
     
     fslmaths temp/sub-s574_acq-0p8mm_magnitude2_bet.nii.gz -ero temp/sub-s574_acq-0p8mm_magnitude2_bet_ero.nii.gz
