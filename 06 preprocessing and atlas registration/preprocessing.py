@@ -40,13 +40,13 @@ anatomicalT1         = anatomical_path  + "8-t1_mp2rage_sag_HCP_0pp8mm3_T1map_BL
 anatomicalT2         = anatomical_path  + "sub-s574_acq-grappatest_T2w.nii.gz"
 jobs = []
 
-if False:
+if True:
     fieldmap_mag        = fieldmap_path + "sub-s574_acq-0p8mm_magnitude2.nii.gz"
     fieldmap_phase      = fieldmap_path + "sub-s574_acq-0p8mm_phasediff.nii.gz"
     functional          = functional_path +"sub-s574_task-rest_acq-0p8mm_bold.nii.gz"
     jobs.append([anatomicalT1, anatomicalT2, fieldmap_mag, fieldmap_phase, functional])
 
-if True:
+if False:
     fieldmap_mag        = fieldmap_path + "sub-s574_acq-1p3mm_magnitude2.nii.gz"
     fieldmap_phase      = fieldmap_path + "sub-s574_acq-1p3mm_phasediff.nii.gz"
     functional          = functional_path +"sub-s574_task-rest_acq-1p3mm_bold.nii.gz"
@@ -401,140 +401,6 @@ def preprocessing_undistortion(input, fieldmap_mag, fieldmap_phase):
 
 
 
-def coregistrationsOriginal (functional, anatomical, MNI, atlas):
-    # typical use: [T1w_functionalspace, atlas_functionalspace] = coregistrations (functional_current, anatomicalT1, constant_MNItemplate, constant_atlas)
-    #example:   input:
-    #               - MNI template
-    #               - Glasser atlas
-    #               - T1w
-    #               - intermediary functional (undistorted, motion corrected, bias field removed)
-    #           output:
-    #               - T1w in functional space
-    #               - Glasser atlas in functional space
-
-    T1w_functionalspace         = output_path   + "anatomical_functionalspace.nii.gz"             # naming(anatomical, "functionalspace", output_path)
-    MNI_anatomicalspace         = temp_path     + "MNI_anatomicalspace.nii.gz"                    # temp_path + "MNI_anatomicalspace.nii.gz" # gets too long otherwise
-    MNI_functionalspace         = output_path   + "MNI_functionalspace.nii.gz"                    # naming(MNI, "functionalspace", output_path)
-    atlas_functionalspace       = output_path   + "atlas_functionalspace.nii.gz"                  # naming(atlas, "functionalspace", output_path)
-    anatomical_bet              = temp_path     + "anatomical_bet.nii.gz"                         # gets too long otherwise
-
-
-    matrix_T1_to_bold = "temp/matrix1.mat"
-    matrix_MNI_to_T1 = "temp/matrix2.mat"
-    matrix_MNI_to_bold = "temp/matrix3.mat"
-
-
-
-
-    jobs = []
-
-
-    # Step 1: Register T1.nii.gz to bold.nii.gz with rigid transformation and get matrix
-
-    job = "bash antsRegistrationSyN.sh -d 3 -f <functional> -m <anatomical> -t 'r' -o temp/ANTsOutput"
-    jobs.append(job)
-    # parameters:
-    #               f: fixed image
-    #               t: 'r' (rigid), 'a': rigid + affine (2 stages), 's': rigid + affine + deformable syn (3 stages)
-    #               d: dimension (2 or 3, not 4)
-    #               m: moving image (that needs transform)
-    #               o: outputfile
-    # output:
-    # [outputname]Affine.mat
-    # [outputname]Warped.nii.gz
-
-    job = "rm <T1w_functionalspace>"
-    jobs.append(job)
-    job = "rm <matrix_T1_to_bold>"
-    jobs.append(job)
-    job = "rm temp/ANTsOutputInverseWarped.nii.gz"
-    jobs.append(job)
-    job = "cp temp/ANTsOutputWarped.nii.gz <T1w_functionalspace>"
-    jobs.append(job)
-    job = "cp temp/ANTsOutput0GenericAffine.mat <matrix_T1_to_bold>"
-    jobs.append(job)
-
-
-
-    # Step 2: Register MNI.nii.gz to T1.nii.gz with nonlinear transformation and get matrix
-    # 2a: anatomical image needs bet, otherwise, MNI template is aligned with skull
-    
-    #job = "bash hd-bet -i <anatomical> -o <anatomical_bet> -device cpu -mode fast -tta 0" # "The options -mode fast and -tta 0 will disable test time data augmentation (speedup of 8x) and use only one model instead of an ensemble of five models for the prediction."
-    #jobs.append(job)
-
-    job = "./others/ROBEX/runROBEX.sh -i <anatomical> -o out.nii.gz"
-    jobs.append(job)
-
-    job = "rm <anatomical_bet>"
-    jobs.append(job)
-    job = "cp others/ROBEX/out.nii.gz <anatomical_bet>"
-    jobs.append(job)
-
-    # 2b: registrations
-    job = "bash antsRegistrationSyN.sh -d 3 -f <anatomical_bet> -m <MNI> -t 's' -o temp/ANTsOutput"
-    jobs.append(job)
-    # parameters:
-    #               f: fixed image
-    #               t: 'r' (rigid), 'a': rigid + affine (2 stages), 's': rigid + affine + deformable syn (3 stages)
-    #               d: dimension (2 or 3, not 4)
-    #               m: moving image (that needs transform)
-    #               o: outputfile
-    # output:
-    # [outputname]Affine.mat
-    # [outputname]Warped.nii.gz
-    job = "rm <MNI_anatomicalspace>"
-    jobs.append(job)
-    job = "rm <matrix_MNI_to_T1>"
-    jobs.append(job)
-    job = "rm temp/ANTsOutputInverseWarped.nii.gz"
-    jobs.append(job)
-    job = "mv temp/ANTsOutputWarped.nii.gz <MNI_anatomicalspace>"
-    jobs.append(job)
-    job = "mv temp/ANTsOutput0GenericAffine.mat <matrix_MNI_to_T1>"
-    jobs.append(job)
-
-
-    # Step 3: Concatenate matrix1 and matrix2 (MNI -> anatomical -> functional) and apply to atlas
-    job = "antsApplyTransforms -d 3 -i <atlas> -o temp/ANTsOutputFINAL -r <functional> -t <matrix_MNI_to_T1> -t <matrix_T1_to_bold>"
-    jobs.append(job)#
-    # parameters:
-    #               -t transformation matrix (can use multiple, each preceded by a -t)
-    #               -i input
-    #               -o output
-    #               -r reference image: "For warping input images, the reference image defines the spacing, origin, size, and direction of the output warped image."
-    #
-
-
-
-
-    for job in jobs:
-        job = job.replace("<functional>",               functional)
-        job = job.replace("<anatomical>",               anatomical)
-        job = job.replace("<anatomical_bet>",           anatomical_bet)
-        job = job.replace("<MNI>",                      MNI)
-        job = job.replace("<atlas>",                    atlas)
-        job = job.replace("<matrix_MNI_to_T1>",         matrix_MNI_to_T1)
-        job = job.replace("<matrix_T1_to_bold>",        matrix_T1_to_bold)
-        job = job.replace("<matrix_MNI_to_bold>",       matrix_MNI_to_bold)
-        job = job.replace("<MNI_anatomicalspace>",      MNI_anatomicalspace)
-        job = job.replace("<MNI_functionalspace>",      MNI_functionalspace)
-        job = job.replace("<T1w_functionalspace>",      T1w_functionalspace)
-        job = job.replace("<atlas_functionalspace>",    atlas_functionalspace)
-
-        print("\n" + job + "\n")
-        wait()
-        run(job)
-
-
-    print("===========================")
-    quit()
-
-
-
-    result = [T1w_functionalspace, atlas_functionalspace]
-    return result
-
-
 
 def resampling (input, resolution): # resolution: e.g., 0.3 for 0.3 mm
     output = "temp/upsampled.nii.gz" # naming(input, "upsample", temp_path)
@@ -563,16 +429,16 @@ def coregistrations(functional, anatomical, MNI, atlas):
     #               - T1w in functional space
     #               - Glasser atlas in functional space
 
-    T1w_functionalspace = output_path + "anatomical_functionalspace.nii.gz"  # naming(anatomical, "functionalspace", output_path)
-    anatomical_functionalspace_bet = output_path + "anatomical_functionalspace_bet.nii.gz"
-    MNI_anatomicalspace = temp_path + "MNI_anatomicalspace.nii.gz"  # temp_path + "MNI_anatomicalspace.nii.gz" # gets too long otherwise
-    MNI_functionalspace = output_path + "MNI_functionalspace.nii.gz"  # naming(MNI, "functionalspace", output_path)
-    atlas_functionalspace = output_path + "atlas_functionalspace.nii.gz"  # naming(atlas, "functionalspace", output_path)
-    anatomical_bet = temp_path + "anatomical_bet.nii.gz"  # gets too long otherwise
-    functional_bet = temp_path + "functional_bet.nii.gz"
-    functional_first = temp_path + "functional_first.nii.gz"
-    functional_first_bet = temp_path + "functional_first_bet.nii.gz"
-    anatomical_bet_functional = output_path + "anatomical_bet_functionalspace.nii.gz"
+    T1w_functionalspace =                           output_path + "anatomical_functionalspace.nii.gz"           # naming(anatomical, "functionalspace", output_path)
+    anatomical_functionalspace_bet =                output_path + "anatomical_functionalspace_bet.nii.gz"
+    MNI_anatomicalspace =                           temp_path + "MNI_anatomicalspace.nii.gz"                    # temp_path + "MNI_anatomicalspace.nii.gz" # gets too long otherwise
+    MNI_functionalspace =                           naming(MNI, "functionalspace", output_path)                 # output_path + "MNI_functionalspace.nii.gz"
+    atlas_functionalspace =                         naming(atlas, "functionalspace", output_path)               # output_path + "atlas_functionalspace.nii.gz"
+    anatomical_bet =                                temp_path + "anatomical_bet.nii.gz"                         # gets too long otherwise
+    functional_bet =                                temp_path + "functional_bet.nii.gz"
+    functional_first =                              temp_path + "functional_first.nii.gz"
+    functional_first_bet =                          temp_path + "functional_first_bet.nii.gz"
+    anatomical_bet_functional =                     output_path + "anatomical_bet_functionalspace.nii.gz"
 
 
     matrix_T1_to_bold = "temp/matrix1.mat"
