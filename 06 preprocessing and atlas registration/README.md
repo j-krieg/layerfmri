@@ -10,7 +10,7 @@
     
     fsl_prepare_fieldmap SIEMENS data/sub-s574/fmap/sub-s574_acq-0p8mm_phasediff.nii.gz temp/sub-s574_acq-0p8mm_magnitude2_bet_ero.nii.gz output/sub-s574_acq-0p8mm_magnitude2_biasfieldEstimation.nii.gz 1.02
     
-    fugue -i data/sub-s574/func/sub-s574_task-rest_acq-0p8mm_bold.nii.gz --dwell=2.6e-06 --unwarpdir=y --loadfmap=output/sub-s574_acq-0p8mm_magnitude2_biasfieldEstimation.nii.gz -u output/sub-s574_task-rest_acq-0p8mm_bold_undistorted.nii.gz --verbose
+    fugue -i data/sub-s574/func/sub-s574_task-rest_acq-0p8mm_bold.nii.gz --dwell=0.000319989 --unwarpdir=y --loadfmap=output/sub-s574_acq-0p8mm_magnitude2_biasfieldEstimation.nii.gz -u output/sub-s574_task-rest_acq-0p8mm_bold_undistorted.nii.gz --verbose
     
     fslroi output/sub-s574_task-rest_acq-0p8mm_bold_undistorted.nii.gz temp/sub-s574_task-rest_acq-0p8mm_bold_undistorted_firstimg.nii.gz 0 1
     
