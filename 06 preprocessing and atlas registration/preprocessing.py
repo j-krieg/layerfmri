@@ -704,21 +704,20 @@ for job in jobs:
     functional_current = functional
 
     # 1. undistortion (i.e., correct warping from bias field)
- #   functional_current =  preprocessing_undistortion (functional_current, fieldmap_mag, fieldmap_phase)
-    #functional_current = preprocessing_undistortionAnts(functional_current, fieldmap_mag, fieldmap_phase)
+    functional_current =  preprocessing_undistortion (functional_current, fieldmap_mag, fieldmap_phase)
 
     # 2. deoblique and upsampling
-#   targetres = 0.3
-#   functional_current = deobliqueUpsample(functional_current, targetres)
+    # targetres = 0.3
+    #functional_current = deobliqueUpsample(functional_current, targetres)
 
     # 3. bias field correction (Bias field correction is performed before motion correction because the bias field is independent of motion.)
- #   functional_current = preprocessing_biasfield4D(functional_current)
+    functional_current = preprocessing_biasfield4D(functional_current)
 
 
     # 4. motion correction to distortion corrrected functional images (with additional output of transformation matrix):
- #   functional_current = preprocessing_motioncorrection(functional_current)
+    functional_current = preprocessing_motioncorrection(functional_current)
 
-    functional_current = "before/bold_undistorted_motioncorr_biasFieldEstimation.nii.gz"
+    #functional_current = "before/bold_undistorted_motioncorr_biasFieldEstimation.nii.gz"
 
 
     #functional_current = resampling (functional_current, 0.3)
