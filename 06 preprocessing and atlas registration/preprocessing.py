@@ -177,12 +177,14 @@ def get_dwell_time(nii):
     try:
         with open(jsonfile) as file:
             data = json.load(file)
-            dwell_time = float(data['DwellTime'])
+            dwell_time = float(data['DwellTime'])             # "dwell time, Dwell Time Equivalent to echo spacing or time between echoes in k-space. " https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/glossary.html
+            #dwell_time = float(data['EffectiveEchoSpacing']) # "EffectiveEchoSpacing": 0.000319989,
     except (FileNotFoundError, KeyError):
         print("Error: could not extract 'DwellTime' from " + jsonfile)
-        dwell_time = 0.0000026
+        dwell_time = 0.0000026 # zuvor verwedet
         print("Guessed dwell time. ################################")
         #quit()
+
 
     print ("dwell time: " + str(dwell_time))
     return dwell_time
@@ -265,7 +267,7 @@ def preprocessing_applyfieldmap(input_img, fieldmap_distortion):
     dwell_time = get_dwell_time(input_img) # taken from json file (alternatively, DICOM header)
 
     print("- fieldmap application for undistortion...")
-    task = "fugue -i <input_epi> --dwell=<dwell_time> --unwarpdir=y- --loadfmap=<fieldmap> -u <result>" # "-savematrix <matrix_distortionCorr>" (--unwarpdir: "Use x, y, z, x-, y- or z- only.")
+    task = "fugue -i <input_epi> --dwell=<dwell_time> --unwarpdir=y --loadfmap=<fieldmap> -u <result>" # "-savematrix <matrix_distortionCorr>" (--unwarpdir: "Use x, y, z, x-, y- or z- only.")
     #task += " --smooth3=1" # Gaussian smoothing with sigma in mm (optional)
     task = task.replace("<input_epi>",                  input_img)
     task = task.replace("<dwell_time>",                 str(dwell_time))
