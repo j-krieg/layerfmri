@@ -21,9 +21,9 @@ Milestones
 	- tbd
 	
 
-<br>
+<br><br>
 Current Status: See [progress reports](https://github.com/j-krieg/layerfmri/tree/main/progress_reports) and emails.
-
+<br>
 
 <br>
 Availabilities:
@@ -32,6 +32,8 @@ Availabilities:
 - November: 30%
 - December: 100%
 
+<br>
+<br>
 
 ## Sequence Overview ##
 
