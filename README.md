@@ -9,7 +9,7 @@ The current preprocessing pipelines comprises the following steps:
 
 ## Tasks ##
 
-Milestones
+**Milestones**
 
 - Preprocessing (B0 estimation, distortion correction, bias field corection, motion correction) ✅
 - Atlas Coregistration and ROI Selection
@@ -22,11 +22,10 @@ Milestones
 	
 
 <br><br>
-Current Status: See [progress reports](https://github.com/j-krieg/layerfmri/tree/main/progress_reports) and emails.
-<br>
+**Current Status**: See [progress reports](https://github.com/j-krieg/layerfmri/tree/main/progress_reports) and emails.
+<br><br>
 
-<br>
-Availabilities:
+**Availabilities**:
 
 - October: 40%
 - November: 30%
