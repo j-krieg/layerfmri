@@ -5,7 +5,7 @@ This is a collection of code for the layer-fMRI processing pipeline. The aim is 
 
 <br>
 The current preprocessing pipeline comprises the following steps:
-![](https://github.com/j-krieg/layerfmri/blob/main/schematic.png?raw=true)
+![https://github.com/j-krieg/layerfmri/blob/main/schematic.png?raw=true](https://github.com/j-krieg/layerfmri/blob/main/schematic.png?raw=true)
 
 ## Tasks ##
 
