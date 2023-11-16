@@ -1,17 +1,17 @@
 # Layer-fMRI Processing Pipeline #
 
 
-This is a collection of code for the layer-fMRI processing pipeline. The aim is to create an fMRI processing pipeline that works robust for ultra-high field 7T functional MRI and preserves cortical layer information by reducing the amount of resampling steps to a minimum
+This is a collection of code for the layer-fMRI processing pipeline. The aim is to create an fMRI processing pipeline that works robustly for ultra-high field 7T functional MRI and preserves cortical layer information by reducing the amount of resampling steps to a minimum.
 
 <br>
-The current preprocessing pipelines comprises the following steps:
+The current preprocessing pipeline comprises the following steps:
 ![](schematic.png)
 
 ## Tasks ##
 
 **Milestones**
 
-- Preprocessing (B0 estimation, distortion correction, bias field corection, motion correction)
+- Preprocessing (B0 estimation, distortion correction, bias field correction, motion correction)
 - Atlas Coregistration and ROI Selection
 - Distortion Correction: performance comparison of blip-up-blip-down vs. magnitude and phase images
 - Layer Selection in Freesurfer
@@ -19,13 +19,14 @@ The current preprocessing pipelines comprises the following steps:
 	- functional: tapping experiment
 	- quantitative difference T1w, T2w
 	- tbd
+ - Final Report
 	
 
 <br><br>
 **Current Status**: See [progress reports](https://github.com/j-krieg/layerfmri/tree/main/progress_reports) and emails.
 <br><br>
 
-**Availabilities**:
+**Availabilities Julius**:
 
 - October: 40%
 - November: 30%
