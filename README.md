@@ -1,7 +1,7 @@
 # Layer-fMRI Processing Pipeline #
 
 
-This is a collection of code for the layer-fMRI processing pipeline. The aim is to create an fMRI processing pipeline that works robustly for ultra-high field 7T functional MRI and preserves cortical layer information by reducing the amount of resampling steps to a minimum. This intends to solve the problem of how to combine the robustness and automation of [fMRIPrep](https://fmriprep.org/en/stable/) optimized for 3T with the ultra-high field [HCP Pipeline](https://www.humanconnectome.org/software/hcp-mr-pipelines).
+This is a collection of code for the layer-fMRI processing pipeline. The aim is to create an fMRI processing pipeline that works robustly for ultra-high field 7T functional MRI and preserves cortical layer information by reducing the amount of resampling steps to a minimum. Thissolves tge the problem of how to combine the robustness and automation of [fMRIPrep](https://fmriprep.org/en/stable/) optimized for 3T with the [HCP Pipeline](https://www.humanconnectome.org/software/hcp-mr-pipelines) that requires manual checks and input.
 
 <br>
 The current preprocessing pipeline comprises the following steps:
