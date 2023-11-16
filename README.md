@@ -1,27 +1,36 @@
 # Layer-fMRI Processing Pipeline #
 
 
-This is a collection of code for the layer-fMRI processing pipeline.
+This is a collection of code for the layer-fMRI processing pipeline. The aim is to create an fMRI processing pipeline that works robust for ultra-high field 7T functional MRI and preserves cortical layer information by reducing the amount of resampling steps to a minimum
+
+<br>
+The current preprocessing pipelines comprises the following steps:
+![](schematic.png)
 
 ## Tasks ##
-Current Status:
 
-- Minimal Example of FSL-based distortion correction and motion correction
+Milestones
+
+- Preprocessing (B0 estimation, distortion correction, bias field corection, motion correction) ✅
+- Atlas Coregistration and ROI Selection
+- Distortion Correction: performance comparison of blip-up-blip-down vs. magnitude and phase images
+- Layer Selection in Freesurfer
+- Analysis
+	- functional: tapping experiment
+	- quantitative difference T1w, T2w
+	- tbd
+	
+
 <br>
-<br>
+Current Status: See [progress reports](https://github.com/j-krieg/layerfmri/tree/main/progress_reports) and emails.
 
-Issues:
- - Check if fieldmap resulting from **preprocessing_createFieldmap** is correct
- - find a way to output a matrix in the distortion correction step **preprocessing_applyFieldmap** to use it in the one-step version **epi_motion_and_distortion_corrected** as part of a concatenated matrix that describes the distortion correction and the motion correction together. 
- - **3dWarp -deoblique** 
 
 <br>
-To-Do:
+Availabilities:
 
-- **topup** using EPI data acquired with opposite phase encoding directions
-- one-step transformation for distortion correction, motion correction, and field correction
-- align anatomical images to preprocessed functional images in freesurfer, LayNii conversion, layer analysis
-
+- October: 40%
+- November: 30%
+- December: 100%
 
 
 ## Sequence Overview ##
