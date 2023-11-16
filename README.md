@@ -11,7 +11,7 @@ The current preprocessing pipelines comprises the following steps:
 
 **Milestones**
 
-- Preprocessing (B0 estimation, distortion correction, bias field corection, motion correction) ✅
+- Preprocessing (B0 estimation, distortion correction, bias field corection, motion correction)
 - Atlas Coregistration and ROI Selection
 - Distortion Correction: performance comparison of blip-up-blip-down vs. magnitude and phase images
 - Layer Selection in Freesurfer
