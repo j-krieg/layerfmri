@@ -30,7 +30,7 @@ The current preprocessing pipeline comprises the following steps:
 **Availabilities Julius**:
 
 - October: 40%
-- November: 30%
+- November: 35%
 - December: 100%
 
 <br>
