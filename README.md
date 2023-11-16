@@ -17,6 +17,7 @@ The current preprocessing pipeline comprises the following steps:
 - Layer Selection in Freesurfer
 - Analysis
 	- functional: tapping experiment
+   	- acquisitions with further test subjects
 	- quantitative difference T1w, T2w
 	- tbd
  - Final Report
