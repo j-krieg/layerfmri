@@ -1158,6 +1158,22 @@ def create_activation_map(functional_preprocessed, functional_reference):    # c
 
 
 
+
+
+
+
+
+
+
+
+
+
+# pipeline main process starts here:
+
+
+
+
+
 for job in jobs:
     [subjectID, anatomicalT1, anatomicalT2, fieldmap_mag, fieldmap_phase, functional] = job
 
