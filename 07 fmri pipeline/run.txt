@@ -1,0 +1,437 @@
+00:35 mri_synthstrip -i ../data/sub-s599/fmap/sub-s599_acq-0p8mm_magnitude2.nii.gz --no-csf -o temp/sub-s599_acq-0p8mm_magnitude2_bet.nii.gz
+00:04 fslmaths temp/sub-s599_acq-0p8mm_magnitude2_bet.nii.gz -ero temp/sub-s599_acq-0p8mm_magnitude2_bet_ero.nii.gz
+00:35 fsl_prepare_fieldmap SIEMENS ../data/sub-s599/fmap/sub-s599_acq-0p8mm_phasediff.nii.gz temp/sub-s599_acq-0p8mm_magnitude2_bet_ero.nii.gz output/sub-s599_acq-0p8mm_magnitude2_biasfieldEstimation.nii.gz 1.02
+00:00 echo dwell time from JSON file: 0.000319989
+24:37 fugue -i ../data/sub-s599/func/sub-s599_task-rest_acq-0p8mm_bold.nii.gz --dwell=0.000319989 --unwarpdir=y --loadfmap=output/sub-s599_acq-0p8mm_magnitude2_biasfieldEstimation.nii.gz -u output/sub-s599_task-rest_acq-0p8mm_bold_undistorted.nii.gz --verbose
+01:31 fslroi output/sub-s599_task-rest_acq-0p8mm_bold_undistorted.nii.gz temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstimg.nii.gz 0 1
+12:48 fast -B -o temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstbiascorr.nii.gz temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstimg.nii.gz
+00:00 rm temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstbiascorr.nii.gz
+00:00 mv temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstbiascorr_restore.nii.gz temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstbiascorr.nii.gz
+00:03 fslmaths temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstimg.nii.gz -div temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_firstbiascorr.nii.gz temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldEstimation.nii.gz
+00:06 fslmaths temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldEstimation.nii.gz -s 1 temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_smooth.nii.gz
+12:52 fslmaths output/sub-s599_task-rest_acq-0p8mm_bold_undistorted.nii.gz -div temp/sub-s599_task-rest_acq-0p8mm_bold_undistorted_smooth.nii.gz biascorr/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval.nii.gz
+81:27 3dvolreg -twopass -prefix output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr.nii.gz biascorr/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval.nii.gz
+01:53 fslroi output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr.nii.gz temp/functional_first_10_volumes.nii.gz 0 10
+02:01 3dresample -dxyz 0.3 0.3 0.3 -prefix temp/functional_first_10_volumes_up.nii.gz -inset temp/functional_first_10_volumes.nii.gz
+02:38 fslmaths temp/functional_first_10_volumes_up.nii.gz -Tmean output/functional_reference0.30.nii.gz
+00:11 fslmaths temp/functional_first_10_volumes.nii.gz -Tmean output/functional_reference.nii.gz
+00:43 3dresample -dxyz 0.30 0.30 0.30 -prefix output/anatomical_up0.30.nii.gz -inset ../data/sub-s599/anat/sub-s599_acq-mprage_T1w.nii.gz
+01:55 fslroi output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr.nii.gz temp/functional_first_10_volumes.nii.gz 0 10
+00:11 3dresample -dxyz 0.3 0.3 0.3 -prefix temp/functional_first_10_volumes_up.nii.gz -inset temp/functional_first_10_volumes.nii.gz
+02:38 fslmaths temp/functional_first_10_volumes_up.nii.gz -Tmean output/functional_reference_up0.3.nii.gz
+00:11 fslmaths temp/functional_first_10_volumes.nii.gz -Tmean output/functional_reference.nii.gz
+00:00 rm temp/functional_first.nii.gz
+01:40 fslroi output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr.nii.gz temp/functional_first.nii.gz 0 1
+01:45 mri_synthstrip -i output/functional_reference_up0.3.nii.gz --no-csf -o output/functional_reference_up0.3_bet.nii.gz
+00:54 mri_synthstrip -i output/functional_reference.nii.gz --no-csf -o output/functional_reference_bet.nii.gz
+01:34 mri_synthstrip -i ../data/sub-s599/anat/sub-s599_acq-mprage_T1w.nii.gz --no-csf -o temp/anatomical_bet.nii.gz
+47:13 flirt -in temp/anatomical_bet.nii.gz -ref output/functional_reference_bet.nii.gz -noresample -omat output/matrix_anatomical_to_functional.mat -out temp/anatomical_bet_functionalspace_low.nii.gz
+00:03 antsApplyTransforms -d 3 -i temp/anatomical_bet.nii.gz -r output/functional_reference_up0.3.nii.gz -o output/anatomical_bet_functionalspace.nii.gz -n NearestNeighbor -t output/matrix_anatomical_to_functional.mat
+376:44 bash antsRegistrationSyN.sh -d 3 -f temp/anatomical_bet_functionalspace_low.nii.gz -m ../atlas/MNI152_2009_template.nii.gz -t 's' -o temp/ANTsOutput
+00:00 rm output/MNI152_2009_template_functionalspace.nii.gz
+00:00 rm output/matrix_MNI_to_functional.mat
+00:00 mv temp/ANTsOutputWarped.nii.gz output/MNI152_2009_template_functionalspace.nii.gz
+00:00 mv temp/ANTsOutput0GenericAffine.mat output/matrix_MNI_to_functional.mat
+00:15 antsApplyTransforms -d 3 -i ../atlas/HCPMMP1_on_MNI152_ICBM2009a_nlin_hd.nii.gz -r output/anatomical_bet_functionalspace.nii.gz -o output/HCPMMP1_on_MNI152_ICBM2009a_nlin_hd_functionalspace.nii.gz -n NearestNeighbor -t output/matrix_MNI_to_functional.mat
+02:54 fslmaths output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr.nii.gz -mas  output/anatomical_functionalspace_bet.gz output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr_bet.nii.gz
+00:00 mkdir output/masks/
+00:36 mri_convert output/anatomical_bet_functionalspace.nii.gz temp/anatomical_bet_functionalspace.mgh
+00:00 mkdir ~/freesurfer
+00:00 rm -rf -f ~/freesurfer/subj_599
+1297:17 recon-all -i temp/anatomical_bet_functionalspace.mgh -sd ~/freesurfer -subjid subj_599 -all
+00:00 mri_convert ~/freesurfer/myid/mri/aparc+aseg.mgz temp/aparc+aseg_functionalspace.nii.gz
+00:06 mri_binarize --i temp/aparc+aseg_functionalspace.nii.gz --gm --o output/masks/mask_gm.nii.gz
+00:05 mri_binarize --i temp/aparc+aseg_functionalspace.nii.gz --all-wm --o output/masks/mask_wm.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -max output/masks/mask_gm.nii.gz temp/mask_wmgm.nii.gz
+00:00 fslmaths temp/mask_wmgm.nii.gz -sub 1 -mul -1 temp/invmask_wmgm.nii.gz
+00:13 fslmaths output/masks/mask_gm.nii.gz -dilF -kernel sphere 1.0 -fmean temp//gm_extended.nii.gz -odt float
+00:01 fslmaths temp/gm_extended.nii.gz -abs -bin temp/gm_extended.nii.gz
+00:01 fslmaths temp/gm_extended.nii.gz -mas temp/invmask_wmgm.nii.gz output/masks/mask_csf.nii.gz
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 2013 -uthr 2013 output/masks/mask_ctx-rh-lingual.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 2005 -uthr 2005 output/masks/mask_ctx-rh-cuneus.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 2021 -uthr 2021 output/masks/mask_ctx-rh-pericalcarine.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 2011 -uthr 2011 output/masks/mask_ctx-rh-lateraloccipital.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 2022 -uthr 2022 output/masks/mask_ctx-rh-postcentral.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 2030 -uthr 2030 output/masks/mask_ctx-rh-superiortemporal.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 1013 -uthr 1013 output/masks/mask_ctx-lh-lingual.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 1005 -uthr 1005 output/masks/mask_ctx-lh-cuneus.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 1021 -uthr 1021 output/masks/mask_ctx-lh-pericalcarine.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 1011 -uthr 1011 output/masks/mask_ctx-lh-lateraloccipital.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 1022 -uthr 1022 output/masks/mask_ctx-lh-postcentral.nii.gz -odt double
+00:01 fslmaths temp/aparc+aseg_functionalspace.nii.gz -thr 1030 -uthr 1030 output/masks/mask_ctx-lh-superiortemporal.nii.gz -odt double
+00:02 fslmaths output/masks/mask_ctx-rh-lingual.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-rh-lingual.nii.gz
+00:02 fslmaths output/masks/mask_ctx-rh-cuneus.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-rh-cuneus.nii.gz
+00:02 fslmaths output/masks/mask_ctx-rh-pericalcarine.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-rh-pericalcarine.nii.gz
+00:02 fslmaths output/masks/mask_ctx-rh-lateraloccipital.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-rh-lateraloccipital.nii.gz
+00:02 fslmaths output/masks/mask_ctx-rh-postcentral.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-rh-postcentral.nii.gz
+00:02 fslmaths output/masks/mask_ctx-rh-superiortemporal.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-rh-superiortemporal.nii.gz
+00:02 fslmaths output/masks/mask_ctx-lh-lingual.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-lh-lingual.nii.gz
+00:02 fslmaths output/masks/mask_ctx-lh-cuneus.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:03 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-lh-cuneus.nii.gz
+00:02 fslmaths output/masks/mask_ctx-lh-pericalcarine.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-lh-pericalcarine.nii.gz
+00:02 fslmaths output/masks/mask_ctx-lh-lateraloccipital.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-lh-lateraloccipital.nii.gz
+00:02 fslmaths output/masks/mask_ctx-lh-postcentral.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:02 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-lh-postcentral.nii.gz
+00:02 fslmaths output/masks/mask_ctx-lh-superiortemporal.nii.gz -add 0 temp/mask_gm_ROI.nii.gz
+01:01 fslmaths temp/mask_gm_ROI.nii.gz -dilF -kernel sphere 2 -fmean temp/ROI_extended.nii.gz -odt float
+00:01 fslmaths temp/ROI_extended.nii.gz -abs -bin temp/ROI_extended_bin.nii.gz
+00:01 fslmaths output/masks/mask_wm.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_wm_ROI.nii.gz
+00:01 fslmaths output/masks/mask_csf.nii.gz -mas temp/ROI_extended_bin.nii.gz temp/mask_csf_ROI.nii.gz
+00:02 fslmaths temp/mask_gm_ROI.nii.gz -abs -bin temp/mask_gm_ROI_bin.nii.gz
+00:02 fslmaths temp/mask_gm_ROI_bin.nii.gz -mul 2 temp/mask_gm_ROI_bin_2.nii.gz
+00:01 fslmaths temp/mask_wm_ROI.nii.gz -mul 3 temp/mask_wm_ROI_3.nii.gz
+00:02 fslmaths temp/mask_csf_ROI.nii.gz -add temp/mask_gm_ROI_bin_2.nii.gz -add temp/mask_wm_ROI_3.nii.gz output/masks/label_ctx-lh-superiortemporal.nii.gz
+00:01 fslmaths ../atlas/MNI152_2009_template.nii.gz -mul 0 -add 1 -roi 145 1 110 1 117 1 0 1 temp/sphere.nii.gz -odt float
+03:25 fslmaths temp/sphere.nii.gz -kernel sphere 5 -fmean temp/sphere.nii.gz -odt float
+03:25 fslmaths temp/sphere.nii.gz -kernel sphere 5 -fmean temp/sphere.nii.gz -odt float
+03:25 fslmaths temp/sphere.nii.gz -kernel sphere 5 -fmean temp/sphere.nii.gz -odt float
+00:01 fslmaths temp/sphere.nii.gz -abs -bin temp/sphere.nii.gz
+00:00 antsApplyTransforms -d 3 -i temp/sphere.nii.gz -r output/masks/label_ctx-rh-postcentral.nii.gz -o temp/sphere_functionalspace.nii.gz -n NearestNeighbor -t output/matrix_MNI_to_functional.mat
+00:02 fslmaths output/masks/label_ctx-rh-postcentral.nii.gz -mas temp/sphere_functionalspace.nii.gz output/masks/label_ctx-rh-postcentral_ROIsphere.nii.gz
+00:01 fslmaths ../atlas/MNI152_2009_template.nii.gz -mul 0 -add 1 -roi 45 1 110 1 117 1 0 1 temp/sphere.nii.gz -odt float
+03:29 fslmaths temp/sphere.nii.gz -kernel sphere 5 -fmean temp/sphere.nii.gz -odt float
+03:25 fslmaths temp/sphere.nii.gz -kernel sphere 5 -fmean temp/sphere.nii.gz -odt float
+03:25 fslmaths temp/sphere.nii.gz -kernel sphere 5 -fmean temp/sphere.nii.gz -odt float
+00:01 fslmaths temp/sphere.nii.gz -abs -bin temp/sphere.nii.gz
+00:00 antsApplyTransforms -d 3 -i temp/sphere.nii.gz -r output/masks/label_ctx-lh-postcentral.nii.gz -o temp/sphere_functionalspace.nii.gz -n NearestNeighbor -t output/matrix_MNI_to_functional.mat
+00:02 fslmaths output/masks/label_ctx-lh-postcentral.nii.gz -mas temp/sphere_functionalspace.nii.gz output/masks/label_ctx-lh-postcentral_ROIsphere.nii.gz
+00:38 fslmaths output/functional_reference_up0.3.nii.gz -mul 0 -rand output/sub-s599_task-rest_acq-0p8mm_bold_undistorted_biasFieldRemoval_motioncorr_activation.nii.gz
+
+00:00 echo ROI: ctx-rh-lingual
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-lingual.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lingual_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-lingual_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lingual_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-lingual_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lingual_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-lingual_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lingual_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-lingual_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lingual_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-lingual_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lingual_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-lingual_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-rh-cuneus
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-cuneus.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-cuneus_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-cuneus_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-cuneus_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-cuneus_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-cuneus_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-cuneus_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-cuneus_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-cuneus_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-cuneus_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-cuneus_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-cuneus_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-cuneus_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-rh-pericalcarine
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-pericalcarine.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-pericalcarine_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-pericalcarine_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-pericalcarine_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-pericalcarine_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-pericalcarine_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-pericalcarine_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-pericalcarine_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-pericalcarine_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-pericalcarine_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-pericalcarine_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-pericalcarine_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-pericalcarine_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-rh-lateraloccipital
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-lateraloccipital.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:21 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lateraloccipital_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-lateraloccipital_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lateraloccipital_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-lateraloccipital_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-lateraloccipital_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-rh-postcentral
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-postcentral.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-rh-postcentral_sphere
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-postcentral_ROIsphere.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-postcentral_sphere_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-rh-superiortemporal
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-rh-superiortemporal.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-rh-superiortemporal_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-superiortemporal_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-superiortemporal_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-superiortemporal_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-superiortemporal_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-superiortemporal_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-superiortemporal_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-superiortemporal_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-superiortemporal_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-rh-superiortemporal_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-rh-superiortemporal_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-rh-superiortemporal_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-lingual
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-lingual.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lingual_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-lingual_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lingual_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-lingual_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lingual_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-lingual_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lingual_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-lingual_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lingual_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-lingual_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lingual_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-lingual_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-cuneus
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-cuneus.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:19 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-cuneus_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-cuneus_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-cuneus_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-cuneus_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-cuneus_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-cuneus_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-cuneus_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-cuneus_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-cuneus_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-cuneus_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-cuneus_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-cuneus_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-pericalcarine
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-pericalcarine.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:20 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-pericalcarine_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-pericalcarine_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-pericalcarine_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-pericalcarine_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-pericalcarine_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-pericalcarine_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-pericalcarine_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-pericalcarine_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-pericalcarine_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-pericalcarine_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-pericalcarine_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-pericalcarine_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-lateraloccipital
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-lateraloccipital.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:19 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lateraloccipital_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-lateraloccipital_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lateraloccipital_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-lateraloccipital_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-lateraloccipital_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-postcentral
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-postcentral.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:18 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-postcentral_sphere
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-postcentral_ROIsphere.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:16 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-postcentral_sphere_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
+00:00 echo ROI: ctx-lh-superiortemporal
+00:00 rm -rf -f temp/layniitemp
+00:00 mkdir temp/layniitemp
+00:00 cp output/masks/label_ctx-lh-superiortemporal.nii.gz temp/layniitemp/layniiLabels.nii.gz
+00:15 LN2_LAYERS -rim temp/layniitemp/layniiLabels.nii.gz -nr_layers 7 -equal_counts -equivol
+00:00 rm output/layer_results/result_7-layers_ctx-lh-superiortemporal_layers_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-superiortemporal_layers_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-superiortemporal_layers_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layers_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-superiortemporal_layers_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-superiortemporal_metric_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-superiortemporal_metric_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-superiortemporal_metric_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_metric_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-superiortemporal_metric_equivol.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-superiortemporal_layerbins_equidist.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equidist.nii.gz output/layer_results/result_7-layers_ctx-lh-superiortemporal_layerbins_equidist.nii.gz
+00:00 rm output/layer_results/result_7-layers_ctx-lh-superiortemporal_layerbins_equivol.nii.gz
+00:00 cp temp/layniitemp/layniiLabels_layerbins_equivol.nii.gz output/layer_results/result_7-layers_ctx-lh-superiortemporal_layerbins_equivol.nii.gz
+00:00 rm -rf -f temp/layniitemp
