@@ -9,10 +9,6 @@ import psutil # for memory usage
 global_simulated = False # simulate runs to re-use file names without running the whole pipeline
 
 
-# git clone https://github.com/ANTsX/ANTsPy.git
-# cd ANTsPy
-# python setup.py install
-
 
 output_path         = "output/"
 temp_path           = "temp/"
