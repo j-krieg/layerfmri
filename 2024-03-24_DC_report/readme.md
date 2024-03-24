@@ -1,18 +1,18 @@
 
 # Characterization of the Brain Intracortical Properties from High-Resolution 7T MRI #
-
+<br>
 Code used to creates figures in report from 2024-03-24.
-
+<br>
 Example usage:
-python3 main.py dc 574re
-python3 main.py dc 597
-python main.py dc summary
+
+    python3 main.py dc 574re
+    python3 main.py dc 597
+    python main.py dc summary
 
 
 
+<br><br><br>
 
 
 
 ![](schematic.svg)
-
-
