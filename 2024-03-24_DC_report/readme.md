@@ -8,6 +8,7 @@ Example usage:
     python3 main.py dc 574re
     python3 main.py dc 597
     python3 main.py dc summary
+    python3 main.py task 574re
 
 
 
