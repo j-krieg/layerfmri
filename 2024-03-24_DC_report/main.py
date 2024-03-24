@@ -51,7 +51,7 @@ try:
     task = sys.argv[1]
     subject = sys.argv[2]
 except IndexError:
-    print("usage: 'python3 main.py layerfmri 599', 'python3 main.py recon 574rescan', 'python3 main.py dc 618'")
+    print("usage: 'python3 main.py task 599re', 'python3 main.py recon 574rescan', 'python3 main.py dc 618'")
     display_available_jobs()
     quit()
 
