@@ -1,7 +1,7 @@
 
 # Characterization of the Brain Intracortical Properties from High-Resolution 7T MRI #
 <br>
-Code used to creates figures in report from 2024-03-24. Comprises all steps for the DC pipeline and the rft/vistim-task pipeline.
+Code used to creates figures in report from 2024-03-24. Includes all steps for the DC pipeline and the rft/vistim-task pipeline.
 <br>
 Example usage:
 
